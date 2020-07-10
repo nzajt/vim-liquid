@@ -44,6 +44,13 @@ if exists('b:liquid_subtype') && b:liquid_subtype != 'yaml'
   syn region liquidYamlHead start="\%^---$" end="^---\s*$" keepend contains=@liquidYamlTop,@Spell
 endif
 
+if exists('b:liquid_subtype') && b:liquid_subtype != 'json'
+  " Schema
+  syn include @liquidSchema syntax/json.vim
+  unlet! b:current_syntax
+  syn region liquidSchema start="^{%\schema]%}$" end="^{%\endschema\%}$" keepend contains=@liquidSchema,@Spell
+endif
+
 if !exists('g:liquid_highlight_types')
   let g:liquid_highlight_types = []
 endif
@@ -73,7 +80,7 @@ syn region  liquidExpression matchgroup=liquidDelimiter start="{{-\=" end="-\=}}
 syn region  liquidComment    matchgroup=liquidDelimiter start="{%-\=\s*comment\s*-\=%}" end="{%-\=\s*endcomment\s*-\=%}" contains=liquidTodo,@Spell containedin=ALLBUT,@liquidExempt keepend
 syn region  liquidRaw        matchgroup=liquidDelimiter start="{%-\=\s*raw\s*-\=%}" end="{%-\=\s*endraw\s*-\=%}" contains=TOP,@liquidExempt containedin=ALLBUT,@liquidExempt keepend
 
-syn cluster liquidExempt contains=liquidStatement,liquidExpression,liquidComment,liquidRaw,@liquidStatement,liquidYamlHead
+syn cluster liquidExempt contains=liquidStatement,liquidExpression,liquidComment,liquidRaw,@liquidStatement,liquidYamlHead,liquidSchema
 syn cluster liquidStatement contains=liquidConditional,liquidRepeat,liquidKeyword,@liquidExpression
 syn cluster liquidExpression contains=liquidOperator,liquidString,liquidNumber,liquidFloat,liquidBoolean,liquidNull,liquidEmpty,liquidPipe,liquidForloop
 
